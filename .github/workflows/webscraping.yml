@@ -13,21 +13,21 @@ jobs:
 
       - name: Install Chrome Driver
         run: |
-        sudo apt-get update
-        sudo apt-get install -y unzip
-        wget -q https://chromedriver.storage.googleapis.com/LATEST_RELEASE
-        LATEST=`cat LATEST_RELEASE`
-        wget https://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
-        unzip chromedriver_linux64.zip
-        chmod +x chromedriver
-        sudo mv chromedriver /usr/local/bin
+          sudo apt-get update
+          sudo apt-get install -y unzip
+          wget -q https://chromedriver.storage.googleapis.com/LATEST_RELEASE
+          LATEST=`cat LATEST_RELEASE`
+          wget https://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          chmod +x chromedriver
+          sudo mv chromedriver /usr/local/bin
 
       - name: Install Chrome
         run : |
-        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-        sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-        sudo apt update
-        sudo apt install google-chrome-stable
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt update
+          sudo apt install google-chrome-stable
 
 
       - name: Install dependencies
