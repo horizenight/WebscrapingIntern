@@ -15,14 +15,6 @@ from selenium.webdriver.common.proxy import Proxy, ProxyType
 from selenium.webdriver.chrome.options import Options
 
 import json
-import os 
-
-
-try:
-    SOME_SECRET = os.environ["SOME_SECRET"]
-except KeyError:
-    SOME_SECRET = "Token not available!"
-
 
 caps = DesiredCapabilities().CHROME
 caps["pageLoadStrategy"] = "normal" 
@@ -32,7 +24,7 @@ prefs = {"profile.managed_default_content_settings.images": 2}
 options.add_experimental_option("prefs", prefs)
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
-driver =  webdriver.Chrome(desired_capabilities=caps, executable_path=r'chromedriver',chrome_options=options)
+driver =  webdriver.Chrome(desired_capabilities=caps, executable_path=r'chromedriver.exe',chrome_options=options)
 driver.implicitly_wait(10)
 wait = WebDriverWait(driver, 10)
 
