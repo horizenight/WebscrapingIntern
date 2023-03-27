@@ -15,7 +15,8 @@ from selenium.webdriver.common.proxy import Proxy, ProxyType
 from selenium.webdriver.chrome.options import Options
 
 import json
-
+CHROMEDRIVER_PATH = '/usr/local/bin/chromedriver'
+WINDOW_SIZE = "1920,1080"
 caps = DesiredCapabilities().CHROME
 caps["pageLoadStrategy"] = "normal" 
 options = webdriver.chrome.options.Options()
@@ -23,8 +24,10 @@ options.add_argument("--start-maximized");
 prefs = {"profile.managed_default_content_settings.images": 2}
 options.add_experimental_option("prefs", prefs)
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
-
-driver =  webdriver.Chrome(desired_capabilities=caps, executable_path='chromedriver.exe',chrome_options=options)
+options.add_argument("--headless")
+options.add_argument("--window-size=%s" % WINDOW_SIZE)
+options.add_argument('--no-sandbox')
+driver =  webdriver.Chrome(desired_capabilities=caps, executable_path=CHROMEDRIVER_PATH,chrome_options=options)
 driver.implicitly_wait(10)
 wait = WebDriverWait(driver, 10)
 
