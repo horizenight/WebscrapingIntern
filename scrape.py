@@ -15,7 +15,11 @@ from selenium.webdriver.common.proxy import Proxy, ProxyType
 from selenium.webdriver.chrome.options import Options
 
 import json
-CHROMEDRIVER_PATH = '/usr/local/bin/chromedriver'
+import os 
+CHROMEDRIVER_PATH =  r'/usr/local/bin/chromedriver'
+chrome_binary_path = '/usr/bin/google-chrome'
+
+print(os.path.exists(CHROMEDRIVER_PATH))
 WINDOW_SIZE = "1920,1080"
 caps = DesiredCapabilities().CHROME
 caps["pageLoadStrategy"] = "normal" 
@@ -27,6 +31,7 @@ options.add_experimental_option('excludeSwitches', ['enable-logging'])
 options.add_argument("--headless")
 options.add_argument("--window-size=%s" % WINDOW_SIZE)
 options.add_argument('--no-sandbox')
+chrome_driver_binary = chrome_binary_path
 driver =  webdriver.Chrome(desired_capabilities=caps, executable_path=CHROMEDRIVER_PATH,chrome_options=options)
 driver.implicitly_wait(10)
 wait = WebDriverWait(driver, 10)
@@ -53,6 +58,7 @@ for url in data:
         conference_name_list.append(conference_name)
         driver.get(url)
         print(url)
+        time.sleep(10)
         try:
                 title = driver.find_element(By.CSS_SELECTOR,"#content > div.abstract_content > h3").text
         except Exception as e :
@@ -123,6 +129,7 @@ d = {"title":title_list,"url":data,"session_list":category_list ,
 #           }
 
 driver.close()
+print("Scraping Done")
 
 with open(f"data2022.json", "w") as f:
                 json.dump(d,f)
