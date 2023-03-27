@@ -32,7 +32,7 @@ prefs = {"profile.managed_default_content_settings.images": 2}
 options.add_experimental_option("prefs", prefs)
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
-driver =  webdriver.Chrome(desired_capabilities=caps, executable_path=r'/usr/local/bin/chromedriver',chrome_options=options)
+driver =  webdriver.Chrome(desired_capabilities=caps, executable_path=r'/usr/bin/google-chrome',chrome_options=options)
 driver.implicitly_wait(10)
 wait = WebDriverWait(driver, 10)
 
