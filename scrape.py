@@ -36,110 +36,122 @@ driver =  webdriver.Chrome(desired_capabilities=caps, executable_path=CHROMEDRIV
 driver.implicitly_wait(10)
 wait = WebDriverWait(driver, 10)
 
-conference_name = "ASN 2022"
+# setup Selenium Browser Above 
 
 
-with open('LinksPub.json') as json_file:
+
+time.sleep(10)
+
+with open('Links2018.json') as json_file:
        data = json.load(json_file)
 
+print(data)
 
-title_list = []
-time_list=[]
-date_list=[]
-location_list=[]
-category_list=[]
-abstract_list=[]
+
+driver.get(data[0])
+driver.find_element(By.XPATH,"/html/body/div[3]/div[2]/div/div/div/div/p[2]/a[22]").click()
+time.sleep(4)
+driver.find_element(By.XPATH,"/html/body/div[3]/div[1]/ul[3]/li[1]/a").click()
+
+time.sleep(10)
+# driver.find_element(By.XPATH,"/html/body/div[3]/div[2]/div/div/div/div[5]/div/ul[3]/li[3]/a").click()
+time.sleep(4)
+
+pages = driver.find_element(By.XPATH,"/html/body/div[3]/div[2]/div/div/div/div[2]/b[2]").text
+pages = int(pages)
+
+time.sleep(10)
+
+
+
+title_list=[]
 authors_list=[]
-funding_list=[]
+affilations_list=[]
+session_list=[]
+citation_list=[]
+abstract_list=[]
+conference_name="EULAR 2018"
 conference_name_list=[]
-conference_name="ASN 2022"
-
-for url in data:
+for link in data:
+        authors=[]
+        affilations=[]
         conference_name_list.append(conference_name)
-        driver.get(url)
-        print(url)
-        time.sleep(10)
+        driver.get(link)
+        time.sleep(4)
+    
         try:
-                title = driver.find_element(By.CSS_SELECTOR,"#content > div.abstract_content > h3").text
-        except Exception as e :
-                title=""
+            title = driver.find_element(By.CLASS_NAME,"title").text
+        except Exception as e:
+            title=""
+
         title_list.append(title)
-
         try:
-            input_str= driver.find_element(By.CSS_SELECTOR,"#content > div.abstract_content > ul.list.list1.abstract_session > li > span").text
-            date_str = input_str.split("|")[0].strip()
-      
-
-            # Extract location
-            location_str = input_str.split("|")[1].split("\n")[0].replace("Location:", "").strip()
-
-            # Extract start and end times
-            time_range_str = input_str.split("\n")[-1].strip()
+            author = driver.find_element(By.CLASS_NAME,"authors").text
+            
         except Exception as e:
-            input_str=""
-            date_str=""
-            location_str=""
-            time_range_str=""
-   
-        time_list.append(time_range_str)
-        date_list.append(date_str)
-        location_list.append(location_str)
+            author=""
+        authors.append(author)
+        authors_list.append(authors)
         
-        try: 
-            category= driver.find_element(By.CSS_SELECTOR,"#content > div.abstract_content > h4:nth-child(6)").text
-        except Exception as e:
-            category=""
-
-        category_list.append(category)
-         
+        
         try:
-            abstract = driver.find_elements(By.CSS_SELECTOR,"#content > div.abstract_content > p")
-            abstract_data=[]
-            for elem in abstract:
-                    abstract_data.append(elem.text)
+            affilation=driver.find_element(By.CLASS_NAME,"affiliations").text
+           
         except Exception as e:
-              abstract_data=[]
-        abstract_list.append(abstract_data)
-
+            affilation=""
+        affilations.append(affilation)
+        affilations_list.append(affilations)
+        
+        
         try:
-            authors = driver.find_elements(By.CSS_SELECTOR,"#content > div.abstract_content > ul:nth-child(9) > li")
-            authors_data=[]
-            for elem in authors:
-                authors_data.append(elem.text)
+            citation = driver.find_element(By.CLASS_NAME,"citations_etc").text
+            
         except Exception as e:
-              authors_data=[]
-        authors_list.append(authors_data)
+            citation=""
+        citation_list.append(citation)
+              
+        
+        try:
+            session = driver.find_element(By.CLASS_NAME,"session").text
+           
+        except Exception as e:
+            session=""
+        
+        session_list.append(session)
 
        
-
         try:
-             funding = driver.find_element(By.XPATH,"/html/body/div[1]/section[2]/div/div/div[2]/div/div[4]/ul[5]/li").text
+            abstract = driver.find_elements(By.CSS_SELECTOR,"#page-content-wrapper > div > div > div > div > p")
+            abstract_text=[]
+            for elem in abstract:
+                    abstract_text.append(elem.text)
         except Exception as e:
-              funding=""
-        funding_list.append(funding)
+             abstract_text=[]
+        
+        abstract_list.append(abstract_text)
+       
+                
 
-   
-d = {"title":title_list,"url":data,"session_list":category_list , 
-                 "authors_list":authors_list,"location_list":location_list,"time_list":time_list,"date_list":date_list,"conference_name_list":conference_name_list,"abstract_list": abstract_list,"funding_list":funding_list
+d = {"links":data,"title":title_list,"session_list":session_list , 
+                 "authors_list":authors_list,"affilation_list":affilations_list,"conference_name_list":conference_name_list,"abstract_list": abstract_list,"citation_list":citation_list
                   }
 # d = {"title":len(title_list),"session_list":len(session_list) , 
 #                  "authors_list":len(authors_list),"affilation_list":len(affilations_list),"conference_name_list":len(conference_name_list),"abstract_list": len(abstract_list),"citation_list":len(citation_list)
-#         
-# 
-#           }
-
-driver.close()
-print("Scraping Done")
-
-with open(f"data2022.json", "w") as f:
-                json.dump(d,f)
-
+#                   }
           
+    
+with open(f"Data2018.json", "w") as f:
+            json.dump(d,f)
+
 
 df = pd.DataFrame.from_dict(d)
 print(df)
 
 
-df.to_excel('ASN_2022.xlsx',index=False)
+df.to_excel('EULAR_2018.xlsx', index=False)
+            
 
-
+            
+print("Done Scraping")
+time.sleep(10)
+driver.close()
