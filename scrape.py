@@ -137,7 +137,7 @@ for i in range(0,len(data)):
                         "authors_list":authors_list,"location_list":location_list,"time_list":time_list,"date_list":date_list,"conference_name_list":conference_name_list,"abstract_list": abstract_list,"funding_list":funding_list
                         }
         
-        with open(f"data2022_2.json", "w") as f:
+        with open(f"data2022_3.json", "w") as f:
                         json.dump(d,f)
         # with open(f"data2022_test_copy.json", "w") as f:
         #                 json.dump(d,f)
@@ -150,7 +150,7 @@ d = {"title":title_list,"url":data,"session_list":category_list ,
 
 driver.close()
 
-with open(f"data2022_2.json", "w") as f:
+with open(f"data2022_3.json", "w") as f:
                 json.dump(d,f)
 
           
@@ -159,5 +159,5 @@ df = pd.DataFrame.from_dict(d)
 print(df)
 
 
-df.to_excel('ASN_2022_2.xlsx',index=False)
+df.to_excel('ASN_2022_3.xlsx',index=False)
 
