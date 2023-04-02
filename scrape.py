@@ -150,7 +150,7 @@ d = {"title":title_list,"url":data,"session_list":category_list ,
 
 driver.close()
 
-with open(f"data2022_6.json", "w") as f:
+with open(f"data2022_7.json", "w") as f:
                 json.dump(d,f)
 
           
@@ -159,5 +159,5 @@ df = pd.DataFrame.from_dict(d)
 print(df)
 
 
-df.to_excel('ASN_2022_6.xlsx',index=False)
+df.to_excel('ASN_2022_7.xlsx',index=False)
 
