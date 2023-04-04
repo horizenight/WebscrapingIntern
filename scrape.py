@@ -5,6 +5,7 @@ from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import Select
 import time
 import datetime
+
 from selenium.webdriver.support.wait import WebDriverWait 
 
 from selenium.webdriver.support import expected_conditions as EC
@@ -15,12 +16,7 @@ from selenium.webdriver.common.proxy import Proxy, ProxyType
 from selenium.webdriver.chrome.options import Options
 
 import json
-import os 
-CHROMEDRIVER_PATH =  r'/usr/local/bin/chromedriver'
-chrome_binary_path = '/usr/bin/google-chrome'
 
-print(os.path.exists(CHROMEDRIVER_PATH))
-WINDOW_SIZE = "1920,1080"
 caps = DesiredCapabilities().CHROME
 caps["pageLoadStrategy"] = "normal" 
 options = webdriver.chrome.options.Options()
@@ -28,19 +24,12 @@ options.add_argument("--start-maximized");
 prefs = {"profile.managed_default_content_settings.images": 2}
 options.add_experimental_option("prefs", prefs)
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
-options.add_argument("--headless")
-options.add_argument("--window-size=%s" % WINDOW_SIZE)
-options.add_argument('--no-sandbox')
-chrome_driver_binary = chrome_binary_path
-driver =  webdriver.Chrome(desired_capabilities=caps, executable_path=CHROMEDRIVER_PATH,chrome_options=options)
+
+driver =  webdriver.Chrome(desired_capabilities=caps, executable_path=r'C:\Development\chromedriver.exe',chrome_options=options)
 driver.implicitly_wait(10)
 wait = WebDriverWait(driver, 10)
 
-# setup Selenium Browser Above 
-
-
-
-conference_name = "ASN 2022"
+conference_name = "ASN 2021"
 
 
 with open('LinksPub.json',encoding='utf-8') as json_file:
@@ -56,101 +45,101 @@ abstract_list=[]
 authors_list=[]
 funding_list=[]
 conference_name_list=[]
-conference_name="ASN 2022"
+conference_name="ASH 2021"
 
 for i in range(0,len(data)):
         url = data[i]
         conference_name_list.append(conference_name)
         driver.get(url)
         print(url)
-        time.sleep(10)
+        time.sleep(5)
+
         try:    
-                time.sleep(4)
-                title = driver.find_element(By.CSS_SELECTOR,"#content > div.abstract_content > h3").text
-                
-                
+                title = driver.find_element(By.CLASS_NAME,"article-title-main").text 
+                print(title)           
         except Exception as e :
                 
                 title=""
         title_list.append(title)
 
+      
         try:
-            time.sleep(4)
-            input_str= driver.find_element(By.CSS_SELECTOR,"#content > div.abstract_content > ul.list.list1.abstract_session > li > span").text
-            date_str = input_str.split("|")[0].strip()
+            date_str = driver.find_element(By.CLASS_NAME,"article-date").text
+           
+            date_obj =datetime.datetime.strptime(date_str, "%B %d, %Y")
+           
+            formatted_date_str = date_obj.strftime("%d-%m-%Y")
+            
+          
+            date_str = formatted_date_str
+          
+
+        
       
 
             # Extract location
-            location_str = input_str.split("|")[1].split("\n")[0].replace("Location:", "").strip()
+           
 
             # Extract start and end times
-            time_range_str = input_str.split("\n")[-1].strip()
+            
         except Exception as e:
-            input_str=""
+            print(e)
             date_str=""
-            location_str=""
-            time_range_str=""
+          
    
-        time_list.append(time_range_str)
+       
         date_list.append(date_str)
-        location_list.append(location_str)
+      
         
+
         try: 
-            time.sleep(4)
-            category= driver.find_element(By.CSS_SELECTOR,"#content > div.abstract_content > h4:nth-child(6)").text
+            category= driver.find_element(By.CLASS_NAME,"article-client_type").text
         except Exception as e:
             category=""
 
         category_list.append(category)
          
+       
         try:
-            time.sleep(4)
-            abstract = driver.find_elements(By.CSS_SELECTOR,"#content > div.abstract_content > p")
-            abstract_data=[]
-            for elem in abstract:
-                    abstract_data.append(elem.text)
+            abstract = driver.find_element(By.ID,"ContentTab").text
+            
+            
         except Exception as e:
-              abstract_data=[]
-        abstract_list.append(abstract_data)
+              abstract=""
+
+        abstract_list.append(abstract)
 
         try:
-            time.sleep(4)
-            authors = driver.find_elements(By.CSS_SELECTOR,"#content > div.abstract_content > ul:nth-child(9) > li")
-            authors_data=[]
-            for elem in authors:
-                authors_data.append(elem.text)
+            authors = driver.find_element(By.CLASS_NAME,"al-authors-list").text
+            print(authors)
+            # authors_data=[]
+            # for elem in authors:
+            #     authors_data.append(elem.text.split(','))
         except Exception as e:
-              authors_data=[]
-        authors_list.append(authors_data)
+              authors=""
+        authors_list.append(authors)
 
        
 
-        try:
-             time.sleep(4)
-             funding = driver.find_element(By.XPATH,"/html/body/div[1]/section[2]/div/div/div[2]/div/div[4]/ul[5]/li").text
-        except Exception as e:
-              funding=""
-        funding_list.append(funding)
 
         
         d = {"title":title_list,"url":data[0:i],"session_list":category_list , 
                         "authors_list":authors_list,"location_list":location_list,"time_list":time_list,"date_list":date_list,"conference_name_list":conference_name_list,"abstract_list": abstract_list,"funding_list":funding_list
                         }
         
-        with open(f"data2022_8.json", "w") as f:
+        with open(f"data2021_2.json", "w") as f:
                         json.dump(d,f)
-        # with open(f"data2022_test_copy.json", "w") as f:
-        #                 json.dump(d,f)
+    
 
-        
-d = {"title":title_list,"url":data,"session_list":category_list , 
-                        "authors_list":authors_list,"location_list":location_list,"time_list":time_list,"date_list":date_list,"conference_name_list":conference_name_list,"abstract_list": abstract_list,"funding_list":funding_list
+
+d = {"url":data,"title":title_list,"Session Type":category_list , 
+                        "Authors":authors_list,"Date":date_list,"Conference":conference_name_list,"Abstracts": abstract_list
                         }
 
 
 driver.close()
 
-with open(f"data2022_8.json", "w") as f:
+with open(f"data2021_3.json", "w") as f:
                 json.dump(d,f)
 
           
@@ -159,5 +148,6 @@ df = pd.DataFrame.from_dict(d)
 print(df)
 
 
-df.to_excel('ASN_2022_8.xlsx',index=False)
+df.to_excel('ASN_2021_3.xlsx',index=False)
+
 
